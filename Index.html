@@ -1,106 +1,194 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Basic Three.js App</title>
-    <style>
-      html, body { margin: 0; padding: 0; overflow: hidden; }
-    </style>
-  </head>
-  <body>
-    
-    <script src="https://threejs.org/build/three.js"></script>
-	<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
-	
-    <script>
-    var texture = new THREE.TextureLoader().load( "tierra.jpg" );
-		var texture1 = new THREE.TextureLoader().load( "nm.png" );
-		var texture2 = new THREE.TextureLoader().load( "texturabalon.jpg" );
-    var soldierBody = new THREE.TextureLoader().load( "./Type01/Body.PNG" );
-    var banditCloth = new THREE.TextureLoader().load( "./bandit/BomerFree_BasicBandit_Cloth_AlbedoTransparency.PNG" );
-    var banditClothNormal = new THREE.TextureLoader().load( "./bandit/BomerFree_BasicBandit_Cloth_Normal.PNG" );
-		var light = new THREE.DirectionalLight( 0xffffff, 1 );
-		light.position.set( -20, 20, 20 );
+	<head>
+		<title>Basic Three.js App</title>
+		<style>
+			html, body { margin: 0; padding: 0; overflow: hidden; }
+		</style>
+	</head>
+	<body>
+		<script src="https://threejs.org/build/three.js"></script>
+		<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://threejs.org/examples/jsm/loaders/OBJLoader.js"></script>
 
-    var light2 = new THREE.DirectionalLight( 0xffffff, 1 );
-		light2.position.set( 20, -20, 20 );
+		<script>
+			//import * as THREE from 'three';
+			//import { MTLLoader } from './jsm/loaders/MTLLoader.js';
+			//import { OBJLoader } from './jsm/loaders/OBJLoader.js';
 
-    var light3 = new THREE.DirectionalLight( 0xffffff, 1 );
-		light3.position.set( 20, 20, -20 );
-		
-		var scene = new THREE.Scene();
-    var aspect = window.innerWidth / window.innerHeight;
-    var camera = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 );
-    var renderer = new THREE.WebGLRenderer();
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    document.body.appendChild( renderer.domElement );
-		
-		
-		
-		scene.add(light);
-    scene.add(light2);
-    scene.add(light3);
-		
-		
-		
-		
-		
-		var geo = new THREE.SphereGeometry( 2, 24, 16 );
-		var materials = new THREE.MeshBasicMaterial({map: texture});
-    var materials = new THREE.MeshPhongMaterial({color: 0xaaaaaa, specular: 0x333333, shininess: 15, map: texture, normalMap: texture1}) //, specularMap: specMap,normalMap: normalMap});
-		
-		var sphere = new THREE.Mesh( geo, materials );
-		sphere.position.x = -5;
-    scene.add( sphere );
-		
+			var soldierBody = new THREE.TextureLoader().load( "./Type01/Body.PNG" );
+			var banditCloth = new THREE.TextureLoader().load( "./bandit/BomerFree_BasicBandit_Cloth_AlbedoTransparency.PNG" );
+			var banditClothNormal = new THREE.TextureLoader().load( "./bandit/BomerFree_BasicBandit_Cloth_Normal.PNG" );
+			var light = new THREE.DirectionalLight( 0xffffff, 1 );
+			light.position.set( -20, 20, 20 );
 
-    var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    var material = new THREE.MeshNormalMaterial();
-    var cube = new THREE.Mesh( geometry, material );
-    cube.position.x = 10
-    scene.add( cube );
+			var light2 = new THREE.DirectionalLight( 0xffffff, 1 );
+			light2.position.set( 20, -20, 20 );
 
-  
-    camera.position.z = 5;
-		controls = new THREE.OrbitControls( camera, renderer.domElement );
-		
-		var loader = new THREE.ObjectLoader();
+			var light3 = new THREE.DirectionalLight( 0xffffff, 1 );
+			light3.position.set( 20, 20, -20 );
 
-		loader.load("bola1.json", function( group ) {
-		mesh = group.children[0];
-    mesh.material = new THREE.MeshPhongMaterial({map: texture2});
-    mesh.position.x = 5;
-    scene.add( mesh );
-		});
+			var scene = new THREE.Scene();
+			var aspect = window.innerWidth / window.innerHeight;
+			var camera = new THREE.PerspectiveCamera( 75, aspect, 0.1, 1000 );
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
 
-    loader.load("soldier.json", function( group ) {
-		mesh = group.children[0]; 
-    mesh.material = new THREE.MeshPhongMaterial({map: soldierBody});
-    mesh.position.x = 1;
-    scene.add( mesh );
-		});
+			scene.add(light);
+			scene.add(light2);
+			scene.add(light3);
+			
+			var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+			var material = new THREE.MeshNormalMaterial();
+			var cube = new THREE.Mesh( geometry, material );
+			cube.position.x = 10
+			scene.add( cube );
+			
 
-    var loader2 = new THREE.ObjectLoader(); 
+			camera.position.z = 5;
+			controls = new THREE.OrbitControls( camera, renderer.domElement );
 
-    loader2.load("bandit.json", function( group ) {
-		mesh = group.children[0];
-    mesh.material = new THREE.MeshPhongMaterial({map: banditCloth, normalMap: banditClothNormal});
-    mesh.position.x = -1;
-    scene.add( mesh );
-		});
+			//Robot dibujado por la tribu
+			var robot = new THREE.ObjectLoader();
 
-		
+			robot.load("estatua.json", function( group ){
+				mesh = group.children[0]; 
+				mesh.scale.x = 0.5;
+				mesh.scale.y = 0.5;
+				mesh.scale.z = 0.5;
+				mesh.position.x = 4.2;
+				mesh.position.z = -8;
+				scene.add( mesh );
+			});
 
-    var render = function () {
-      requestAnimationFrame( render );
-      cube.rotation.x += 0.1;
-      cube.rotation.y += 0.1;
-      renderer.render( scene, camera );
-    };
+			robot.load("estatua.json", function( group ){
+				mesh = group.children[0]; 
+				mesh.scale.x = 0.5;
+				mesh.scale.y = 0.5;
+				mesh.scale.z = 0.5;
+				mesh.position.x = 7;
+				mesh.position.z = -12;
+				scene.add( mesh );
+			});
 
-    render();  
-    </script>
-  </body>
+			//Soldados escondidos
+			var soldier = new THREE.ObjectLoader();
+
+			soldier.load("soldier.json", function( group ) {
+				mesh = group.children[0]; 
+				mesh.material = new THREE.MeshPhongMaterial({map: soldierBody});
+				mesh.position.x = 0.8;
+				mesh.position.z = -14;
+				mesh.rotation.y = -1.5;
+				scene.add( mesh );
+			});
+
+			soldier.load("soldier.json", function( group ) {
+				mesh = group.children[0]; 
+				mesh.material = new THREE.MeshPhongMaterial({map: soldierBody});
+				mesh.position.x = 1.6;
+				mesh.position.z = -14;
+				mesh.rotation.y = 1.5;
+				scene.add( mesh );
+			});
+
+			//Bandidos conversando en forma de triangulo
+			var bandit = new THREE.ObjectLoader(); 
+
+			bandit.load("bandit.json", function( group ) {
+				mesh = group.children[0];
+				mesh.material = new THREE.MeshPhongMaterial({map: banditCloth, normalMap: banditClothNormal});
+				mesh.position.x = 1.9;
+				mesh.position.y = 0.1;
+				mesh.position.z = 1.2;
+				scene.add( mesh );
+			});
+
+			bandit.load("bandit.json", function( group ) {
+				mesh = group.children[0];
+				mesh.material = new THREE.MeshPhongMaterial({map: banditCloth, normalMap: banditClothNormal});
+				mesh.position.x = 2.5;
+				mesh.position.y = 0.1;
+				mesh.position.z = 2.2;
+				mesh.rotation.y = -2;
+				scene.add( mesh );
+			});
+
+			bandit.load("bandit.json", function( group ) {
+				mesh = group.children[0];
+				mesh.material = new THREE.MeshPhongMaterial({map: banditCloth, normalMap: banditClothNormal});
+				mesh.position.x = 1;
+				mesh.position.y = 0.1;
+				mesh.position.z = 2.2;
+				mesh.rotation.y = 2;
+				scene.add( mesh );
+			});
+			
+			//Escena dividida en varias partes para poder renderizarla
+			var escena = new THREE.ObjectLoader(); 
+
+			escena.load("escena4.2.json", function( object ) {
+				mesh = object;
+				mesh.position.x = 0;
+				scene.add( mesh );
+			});
+
+			escena.load("escena4.4.json", function( object ) {
+				mesh = object;
+				mesh.position.x = 0;
+				scene.add( mesh );
+			});
+
+			escena.load("escena4.6.json", function( object ) {
+				mesh = object;
+				mesh.position.x = 0;
+				scene.add( mesh );
+			});
+
+			escena.load("semaforo.json", function( object ) {
+				mesh = object;
+				mesh.position.x = 0;
+				scene.add( mesh );
+			});
+
+			var piramide = new THREE.ObjectLoader();
+
+			piramide.load("piramide.json", function( object ) {
+				mesh = object;
+				mesh.position.x = 0;
+				scene.add( mesh );
+			});
+
+			piramide.load("piramide.json", function( object ) {
+				mesh = object;
+				mesh.position.x = 0;
+				mesh.rotation.y = 1.6;
+				scene.add( mesh );
+			});
+
+			piramide.load("piramide.json", function( object ) {
+				mesh = object;
+				mesh.position.x = 0;
+				mesh.rotation.y = -1.5;
+				scene.add( mesh );
+			});
+
+			piramide.load("piramide.json", function( object ) {
+				mesh = object;
+				mesh.position.x = 0;
+				mesh.rotation.y = 3.2;
+				scene.add( mesh );
+			});
+
+			var render = function () {
+				requestAnimationFrame( render );
+				cube.rotation.x += 0.1;
+				cube.rotation.y += 0.1;
+				renderer.render( scene, camera );
+			};
+
+			render();  
+		</script>
+	</body>
 </html>
-
-
-
